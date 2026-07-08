@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Нэгэн нандин хүнд ✨</title>
+    <style>
+        :root {
+            --primary: #ff7675;
+            --secondary: #fd79a8;
+            --bg: #0f0c1b;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: var(--bg);
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            perspective: 1000px;
+        }
+        canvas {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 40px;
+            border-radius: 30px;
+            width: 90%;
+            max-width: 480px;
+            text-align: center;
+            z-index: 2;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            transform: translateZ(0);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .step { display: none; }
+        .step.active { display: block; animation: fadeIn 0.8s ease forwards; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        h1 { color: #fff; font-size: 26px; font-weight: 600; margin-bottom: 20px; line-height: 1.4; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+        p { color: #dfe6e9; font-size: 16px; line-height: 1.7; margin-bottom: 25px; }
+        .avatar-wrapper {
+            position: relative;
+            width: 160px; height: 160px;
+            margin: 0 auto 25px;
+            border-radius: 50%;
+            padding: 5px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            box-shadow: 0 10px 25px rgba(255, 118, 117, 0.4);
+        }
+        .avatar-wrapper img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 4px solid #1a162b;
+        }
+        .btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border: none;
+            padding: 14px 35px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(255, 118, 117, 0.3);
+            letter-spacing: 0.5px;
+        }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(255, 118, 117, 0.5); }
+        .choice-container { display: flex; justify-content: center; gap: 15px; margin-top: 20px; }
+        .btn-outline {
+            background: transparent;
+            color: #fff;
+            border: 2px solid rgba(255,255,255,0.4);
+            padding: 12px 30px;
+            font-size: 15px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-outline:hover { background: rgba(255,255,255,0.1); border-color: #fff; }
+    </style>
+</head>
+<body>
+
+    <canvas id="heartCanvas"></canvas>
+
+    <!-- Дууны нэрийг music.mp3 болгож богиносгоод энд холбов -->
+    <audio id="bgMusic" loop preload="auto">
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="glass-card">
+        <!-- АЛХАМ 1 -->
+        <div class="step active" id="step1">
+            <div style="font-size: 55px; margin-bottom: 15px;">✨</div>
+            <h1>Чамд зориулж жижигхэн дижитал орон зай бэлдлээ...</h1>
+            <p>Чихэвчээ зүүгээд, тухтай суугаад доорх товчлуур дээр дараарай.</p>
+            <button class="btn" onclick="startExperience()">Орох</button>
+        </div>
+
+        <!-- АЛХАМ 2 -->
+        <div class="step" id="step2">
+            <h1>Түрүүлэх асуулт! 🙋‍♂️</h1>
+            <p>Өнөөдөр энэ орчлонгийн хамгийн эелдэг, гэрэлтсэн охины төрсөн өдөр мөн үү?</p>
+            <div class="choice-container">
+                <button class="btn" onclick="nextStep(3)">Мэдээж мөн!</button>
+                <button class="btn-outline" id="runBtn" onmouseover="dodgeButton()">Үгүй</button>
+            </div>
+        </div>
+
+        <!-- АЛХАМ 3 -->
+        <div class="step" id="step3">
+            <div class="avatar-wrapper">
+                <img src="lily.jpg" alt="Үзэсгэлэнтэй">
+            </div>
+            <h1>Төрсөн өдрийн баяр хүргэе! 🎉</h1>
+            <p>Өнөөдөр чиний өдөр учраас хамгийн гоёор инээмсэглээрэй. <br><br>
+               Чамайг үргэлж ийм хөөрхөн хэвээрээ байна гэдэгт итгэдэг. Чиний байгаа газар үргэлж дулаахан уур амьсгалтай байдаг шүү. Төрсөн өдрийн мэнд хүргэе! ✨🌸</p>
+        </div>
+    </div>
+
+    <script>
+        const music = document.getElementById('bgMusic');
+        let currentStep = 1;
+
+        // Хөтчийн Autoplay блокийг гаргах баталгаат функц
+        function startExperience() {
+            music.currentTime = 0; // Эхнээс нь тоглуулах
+            
+            // Тоглуулах оролдлого
+            const playPromise = music.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.then(_ => {
+                    console.log("Дуу амжилттай явж эхэллээ!");
+                }).catch(error => {
+                    console.log("Хөтөч дууг блоклолоо, дараагийн алхам дээр дахин оролдоно.");
+                });
+            }
+            nextStep(2);
+        }
+
+        function nextStep(stepNum) {
+            document.getElementById(`step${currentStep}`).classList.remove('active');
+            document.getElementById(`step${stepNum}`).classList.add('active');
+            currentStep = stepNum;
+
+            // Хэрэв эхний товчлуур дээр дуугараагүй бол энд дахин хүчээр тоглуулах оролдлого хийнэ
+            if(stepNum === 3) { 
+                music.play().catch(e => console.log("Дуу тоглуулах боломжгүй байна."));
+                initHearts(); 
+            }
+        }
+
+        function dodgeButton() {
+            const btn = document.getElementById('runBtn');
+            const x = Math.random() * (window.innerWidth - 120);
+            const y = Math.random() * (window.innerHeight - 50);
+            btn.style.position = 'fixed';
+            btn.style.left = `${x}px`;
+            btn.style.top = `${y}px`;
+        }
+
+        const canvas = document.getElementById('heartCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class HeartParticle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height + Math.random() * 100;
+                this.size = Math.random() * 12 + 6;
+                this.speedY = Math.random() * -2 - 1;
+                this.speedX = Math.sin(Math.random() * 2) * 0.8;
+                this.opacity = Math.random() * 0.6 + 0.4;
+            }
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX;
+                if (this.opacity > 0.01) this.opacity -= 0.002;
+            }
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.opacity;
+                ctx.fillStyle = `rgba(255, 118, 117, ${this.opacity})`;
+                ctx.beginPath();
+                ctx.moveTo(this.x, this.y);
+                ctx.bezierCurveTo(this.x - this.size/2, this.y - this.size/2, this.x - this.size, this.y + this.size/3, this.x, this.y + this.size);
+                ctx.bezierCurveTo(this.x + this.size, this.y + this.size/3, this.x + this.size/2, this.y - this.size/2, this.x, this.y);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        function initHearts() {
+            setInterval(() => {
+                if(particles.length < 70) { particles.push(new HeartParticle()); }
+            }, 100);
+            animate();
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+                if (particles[i].y < -20 || particles[i].opacity <= 0) {
+                    particles.splice(i, 1);
+                    i--;
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+    </script>
+</body>
+</html>
